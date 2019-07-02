@@ -1,0 +1,30 @@
+#!/bin/bash
+#todoist l |  cat -n
+
+while test $# -gt 0; do
+    case "$1" in
+	    -d|--delete)
+		todoist l | cat -n
+		echo "Select project number to delete."
+		read number
+		selection=$(todoist l | cut -f 1 -d ' ' | sed -n "$number"p)
+		$(todoist d "$selection")
+		break
+		;;
+	    -m|--modify)
+		todoist l | cat -n
+		echo "Select project number to modify and modification"
+		read command
+		number=$(echo "$command" | cut -f 1 -d ' ')
+		selection=$(todoist l | cut -f 1 -d ' ' | sed -n "$number"p)
+		flag=$(echo "$command" | cut -f 2 -d ' ')
+		mod=$(echo "$command" | cut -f 3 -d ' ')
+		$(todoist modify "$selection" "$flag" "$mod")
+		break
+		;;
+	    *)
+		break
+		;;
+    esac
+done
+
